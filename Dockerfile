@@ -1,8 +1,7 @@
-FROM jenkins/jenkins:lts
+FROM eclipse-temurin:21-jdk-jammy
 
-USER root
+WORKDIR /app
 
-RUN apt-get update && \
-    apt-get install -y maven nodejs npm
+COPY target/*.jar app.jar
 
-USER jenkins
+ENTRYPOINT ["java", "-jar", "app.jar"]

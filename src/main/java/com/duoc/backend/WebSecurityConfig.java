@@ -24,7 +24,10 @@ class WebSecurityConfig{
                         .disable())
                 .authorizeHttpRequests( authz -> authz
                         .requestMatchers(HttpMethod.POST,Constants.LOGIN_URL).permitAll()
+                        .requestMatchers(HttpMethod.GET, Constants.LOGIN_URL).permitAll()
+                        .requestMatchers("/h2-console/**").permitAll() //mientras se hacen pruebas con H2
                         .anyRequest().authenticated())
+                .headers(headers -> headers.frameOptions(frame -> frame.disable())) //H2
                 .addFilterAfter(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

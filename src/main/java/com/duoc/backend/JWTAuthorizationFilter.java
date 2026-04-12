@@ -5,6 +5,8 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,13 +24,16 @@ import static com.duoc.backend.Constants.*;
 @Component
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
+    @Value("${jwt.secret}")
+    private String secret;
+
     private Claims setSigningKey(HttpServletRequest request) {
         String jwtToken = request.
                 getHeader(HEADER_AUTHORIZACION_KEY).
                 replace(TOKEN_BEARER_PREFIX, "");
 
                 return Jwts.parser()
-                .verifyWith((SecretKey) getSigningKey(SUPER_SECRET_KEY))
+                .verifyWith((SecretKey) Constants.getSigningKey(secret))
                 .build()
                 .parseSignedClaims(jwtToken)
                 .getPayload();
