@@ -1,8 +1,9 @@
-FROM jenkins/jenkins:lts
+FROM eclipse-temurin:17-jdk-alpine
 
-USER root
+WORKDIR /app
 
-RUN apt-get update && \
-    apt-get install -y maven nodejs npm
+COPY target/*.jar app.jar
 
-USER jenkins
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-jar", "app.jar"]

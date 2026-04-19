@@ -8,7 +8,9 @@ import com.duoc.backend.Medication.MedicationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -70,5 +72,47 @@ public class InvoiceService {
 
     public void deleteInvoice(Long id) {
         invoiceRepository.deleteById(id);
+    }
+
+    //Nueva funcionalidad semana4: generacion de facturas detalladas
+    public Map<String, Object> getDetailedInvoice(Long id) {
+        Invoice invoice = getInvoiceById(id);
+
+        if (invoice == null) {
+            throw new RuntimeException("Factura no encontrada");
+        }
+
+        Map<String, Object> response = new HashMap<>();
+
+        response.put("facturaId", invoice.getId());
+        response.put("total", invoice.getTotalCost());
+
+        response.put("medicamentos", invoice.getMedications().stream().map(m -> {
+            Map<String, Object> med = new HashMap<>();
+            med.put("nombre", m.getName());
+            med.put("precio", m.getCost());
+            return med;
+        }).collect(Collectors.toList()));
+
+        response.put("servicios", invoice.getCares().stream().map(c -> {
+            Map<String, Object> care = new HashMap<>();
+            care.put("nombre", c.getName());
+            care.put("precio", c.getCost());
+            return care;
+        }).collect(Collectors.toList()));
+
+        return response;
+    }
+
+    //Nueva funcionalidad semana5: enviar el invoice de manera simulada
+    public void sendInvoiceByEmail(Long id) {
+        Invoice invoice = getInvoiceById(id);
+
+        // simulación
+        System.out.println("Enviando factura ID: " + id);
+
+        if (invoice == null) {
+            throw new RuntimeException("Factura no encontrada");
+        }
     }
 }

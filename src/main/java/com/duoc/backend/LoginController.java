@@ -19,6 +19,7 @@ public class LoginController {
     @Autowired
     private MyUserDetailsService userDetailsService;
 
+     
     @PostMapping("login")
     public String login(
             @RequestParam("user") String username,
@@ -37,5 +38,19 @@ public class LoginController {
         String token = jwtAuthtenticationConfig.getJWTToken(username);
         return token;
     }
+
+    //@PostMapping("login")
+    //public String login(
+      //      @RequestParam("user") String username,
+        //    @RequestParam("encryptedPass") String encryptedPass) {
+
+        // usuario fake para pruebas
+        //if (!username.equals("admin") || !encryptedPass.equals("1234")) {
+          //  throw new RuntimeException("Invalid login");
+        //}
+
+        //String token = jwtAuthtenticationConfig.getJWTToken(username);
+        //return token;
+    //}
 
 }

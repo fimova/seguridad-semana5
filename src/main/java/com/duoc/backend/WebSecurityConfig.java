@@ -22,10 +22,14 @@ class WebSecurityConfig{
         http
                 .csrf((csrf) -> csrf
                         .disable())
-                .authorizeHttpRequests( authz -> authz
-                        .requestMatchers(HttpMethod.POST,Constants.LOGIN_URL).permitAll()
-                        .anyRequest().authenticated())
-                .addFilterAfter(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
+                .authorizeHttpRequests(authz -> authz
+                        .requestMatchers("/home", "/login-view", "/h2-console/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, Constants.LOGIN_URL).permitAll()
+                        .requestMatchers(HttpMethod.GET, "/greetings").permitAll()
+                        .anyRequest().authenticated()
+                        )
+                .headers(headers -> headers.frameOptions(frame -> frame.disable())) //H2
+                .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }
